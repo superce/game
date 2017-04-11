@@ -1,0 +1,28 @@
+require_once('../qiniu/auth_digest.php');
+require_once('../qiniu/pfop.php');
+require_once('../qiniu/http.php');
+
+
+$client = new Qiniu_MacHttpClient(null);
+
+$pfop = new Qiniu_Pfop();
+
+$pfop->Bucket = 'itisatest3';
+$pfop->Key = 'sample.mp4';
+
+$savedKey = 'foream_wm.mp4';
+$entry = Qiniu_Encode("itisatest3:$savedKey");
+//$image = Qiniu_Encode('http://7sbryo.com2.z0.glb.qiniucdn.com/watermark.png');
+$image = Qiniu_Encode('http://i.xiaohongchun.com/watermark.png');
+$pfop->Fops = "avthumb/mp4/wmImage/aHR0cDovLzd1Mmsyay5jb20yLnowLmdsYi5jbG91ZGRuLmNvbS93YXRlcm1hcmtfNzIwLnBuZw==/wmGravity/NorthWest/rotate/auto|saveas/$entry";
+//$pfop->Fops = "avthumb/mp4/";
+$pfop->Force = 1;
+$pfop->Pipeline = "frame";
+
+list($ret, $err) = $pfop->MakeRequest($client);
+echo "\n\n====> pfop result: \n";
+if ($err !== null) {
+    var_dump($err);
+} else {
+    var_dump($ret);
+}
